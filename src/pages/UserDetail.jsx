@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Award, User, Mail, BookOpen, TrendingUp, Target } from "lucide-react";
+import { ArrowLeft, Award, User, Mail, BookOpen, Target } from "lucide-react";
 
 export default function UserDetail() {
   const { id } = useParams();
@@ -26,113 +26,55 @@ export default function UserDetail() {
   if (!user) {
     return (
       <div className="p-6 text-center text-red-600 font-semibold">
-        ❌ User not found
+        User not found
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto mt-8 space-y-10">
-      {/* Back Button */}
+    <div className="p-4 sm:p-6 max-w-3xl mx-auto">
       <button
+        className="flex items-center gap-2 text-blue-600 mb-4"
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-600 hover:text-teal-600 mb-4 transition"
       >
-        <ArrowLeft size={18} />
-        Back to Users
+        <ArrowLeft /> Back
       </button>
 
-      {/* Header */}
-      <div className="bg-gradient-to-r from-teal-500 to-cyan-500 rounded-3xl p-10 text-white shadow-lg">
-        <div className="flex items-center gap-6">
-          <div className="w-28 h-28 rounded-full bg-white text-teal-600 flex items-center justify-center text-4xl font-bold shadow-md">
-            {user.name[0]}
-          </div>
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">{user.name}</h1>
-            <p className="text-gray-100 text-lg">{user.role}</p>
-            <p className="text-gray-200">{user.email}</p>
-          </div>
-        </div>
-      </div>
+      <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md">
+        <h2 className="text-xl sm:text-2xl font-bold mb-2 flex items-center gap-2">
+          <User /> {user.name}
+        </h2>
+        <p className="text-gray-600 text-sm sm:text-base mb-1 flex items-center gap-1">
+          <Mail /> {user.email}
+        </p>
+        <p className="text-gray-600 text-sm sm:text-base mb-1 flex items-center gap-1">
+          <Target /> Role: {user.role}
+        </p>
+        {user.role === "Student" && (
+          <p className="text-gray-600 text-sm sm:text-base mb-4 flex items-center gap-1">
+            <Award /> CGPA: {user.cgpa}
+          </p>
+        )}
 
-      {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {user.cgpa > 0 && (
-          <div className="p-6 bg-white rounded-2xl shadow-md flex items-center gap-4 border border-gray-100">
-            <Award className="w-10 h-10 text-blue-600" />
-            <div>
-              <p className="text-sm text-gray-500">CGPA</p>
-              <h2 className="text-2xl font-bold text-gray-800">{user.cgpa}</h2>
+        {user.role === "Student" && (
+          <div>
+            <h3 className="text-lg sm:text-xl font-semibold mb-2 flex items-center gap-2">
+              <BookOpen /> Semesters
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {semesters.map((sem) => (
+                <div
+                  key={sem.id}
+                  className="p-3 border rounded-lg hover:bg-gray-50 transition"
+                >
+                  <p className="font-semibold text-sm sm:text-base">{sem.term}</p>
+                  <p className="text-sm sm:text-base">GPA: {sem.gpa}</p>
+                  <p className="text-sm sm:text-base">Credits: {sem.credits}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
-        <div className="p-6 bg-white rounded-2xl shadow-md flex items-center gap-4 border border-gray-100">
-          <Mail className="w-10 h-10 text-green-600" />
-          <div>
-            <p className="text-sm text-gray-500">Email</p>
-            <h2 className="text-lg font-medium text-gray-800">{user.email}</h2>
-          </div>
-        </div>
-        <div className="p-6 bg-white rounded-2xl shadow-md flex items-center gap-4 border border-gray-100">
-          <User className="w-10 h-10 text-purple-600" />
-          <div>
-            <p className="text-sm text-gray-500">Role</p>
-            <h2 className="text-lg font-medium text-gray-800">{user.role}</h2>
-          </div>
-        </div>
-      </div>
-
-      {/* About Me */}
-      <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">About Me</h2>
-        <p className="text-gray-600 leading-relaxed">
-          {user.role === "Student"
-            ? `${user.name} is a dedicated student with excellent academic performance. Currently maintaining a CGPA of ${user.cgpa}, actively participating in coursework, and working towards professional growth.`
-            : `${user.name} is a passionate instructor who helps students achieve academic excellence and contributes to the institution's growth.`}
-        </p>
-      </div>
-
-      {/* Semesters Section */}
-      {user.role === "Student" && (
-        <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Semester Records</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {semesters.map((sem) => (
-              <div
-                key={sem.id}
-                className="p-6 rounded-2xl border border-gray-100 shadow-md hover:shadow-lg transition bg-gradient-to-r from-teal-50 to-cyan-50"
-              >
-                <h3 className="text-lg font-bold text-gray-800 mb-2">{sem.term}</h3>
-                <p className="text-gray-600 mb-2">Credits Earned: {sem.credits}</p>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-blue-600" />
-                  <span className="font-semibold text-gray-700">GPA: {sem.gpa}</span>
-                </div>
-                {/* Progress Bar */}
-                <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-gradient-to-r from-teal-500 to-cyan-500 h-2 rounded-full"
-                    style={{ width: `${(sem.gpa / 4) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Academic Goals */}
-      <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Academic Goals</h2>
-        <div className="flex items-start gap-4">
-          <Target className="w-10 h-10 text-red-500" />
-          <p className="text-gray-600 leading-relaxed">
-            {user.role === "Student"
-              ? "Focused on improving research skills, preparing for final year project, and aiming for higher CGPA with consistent performance."
-              : "Committed to guiding students, enhancing teaching methods, and contributing to academic research and publications."}
-          </p>
-        </div>
       </div>
     </div>
   );
